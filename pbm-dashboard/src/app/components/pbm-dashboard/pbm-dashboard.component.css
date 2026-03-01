@@ -1,0 +1,268 @@
+.dashboard-shell {
+  min-height: 100vh;
+}
+
+.hero-panel,
+.metric-card,
+.panel {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(23, 50, 77, 0.08);
+  border-radius: 24px;
+}
+
+.hero-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1.9fr) minmax(260px, 0.9fr);
+  gap: 1.5rem;
+  padding: 1.75rem;
+}
+
+.eyebrow,
+.section-label,
+.metric-label,
+.timestamp {
+  color: var(--pbm-slate);
+  letter-spacing: 0.08em;
+}
+
+.eyebrow,
+.section-label,
+.metric-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+h1,
+h2 {
+  margin: 0;
+  font-weight: 700;
+  color: var(--pbm-ink);
+}
+
+h1 {
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  line-height: 1.05;
+}
+
+h2 {
+  font-size: 1.2rem;
+}
+
+.hero-summary {
+  max-width: 42rem;
+  color: #476179;
+  font-size: 1rem;
+}
+
+.hero-actions {
+  padding: 1rem;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(13, 148, 136, 0.1), rgba(13, 148, 136, 0.03));
+}
+
+.metric-card,
+.panel {
+  padding: 1.25rem;
+  height: 100%;
+}
+
+.metric-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.metric-card strong {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.metric-card small {
+  color: #5c7287;
+}
+
+.metric-card-alert {
+  background: linear-gradient(145deg, rgba(245, 158, 11, 0.14), rgba(255, 255, 255, 0.92));
+}
+
+.panel-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.stat-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(13, 148, 136, 0.12);
+  color: #0f766e;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.trend-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.85rem;
+  align-items: end;
+  min-height: 280px;
+}
+
+.trend-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  text-align: center;
+}
+
+.trend-column strong {
+  font-size: 0.9rem;
+}
+
+.trend-column span,
+.trend-column small,
+.cell-subtitle {
+  color: #688095;
+}
+
+.trend-column span,
+.trend-column small {
+  font-size: 0.78rem;
+}
+
+.trend-bar-wrap {
+  width: 100%;
+  height: 170px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.trend-bar {
+  width: 100%;
+  min-height: 14%;
+  border-radius: 18px 18px 6px 6px;
+  background: linear-gradient(180deg, #0d9488 0%, #155e75 100%);
+  box-shadow: inset 0 -8px 16px rgba(0, 0, 0, 0.12);
+}
+
+.mix-list,
+.alert-list {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.mix-row,
+.alert-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.95rem 1rem;
+  border-radius: 18px;
+  background: var(--pbm-surface);
+}
+
+.mix-row span,
+.alert-item p {
+  color: #587085;
+  font-size: 0.85rem;
+}
+
+tbody tr {
+  cursor: pointer;
+}
+
+tbody tr td {
+  background: transparent;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.detail-tile {
+  padding: 1rem;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #f4f9fb, #edf4f8);
+}
+
+.detail-tile span {
+  display: block;
+  color: #688095;
+  font-size: 0.8rem;
+  margin-bottom: 0.3rem;
+}
+
+.detail-tile strong {
+  font-size: 1.5rem;
+}
+
+.alert-item {
+  align-items: flex-start;
+}
+
+.alert-chip {
+  min-width: 4.5rem;
+  text-align: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: rgba(23, 50, 77, 0.08);
+}
+
+.severity-high {
+  border-left: 4px solid var(--pbm-danger);
+}
+
+.severity-medium {
+  border-left: 4px solid var(--pbm-warn);
+}
+
+.severity-low {
+  border-left: 4px solid var(--pbm-accent);
+}
+
+.loading-state {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  font-size: 1.1rem;
+  color: #426177;
+}
+
+@media (max-width: 991.98px) {
+  .hero-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .trend-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767.98px) {
+  .trend-grid,
+  .detail-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 575.98px) {
+  .trend-grid,
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-head {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,193 @@
+<div class="dashboard-shell" *ngIf="!isLoading; else loadingState">
+  <div class="container-fluid py-4 px-3 px-lg-4" *ngIf="dashboard; else errorState">
+    <section class="hero-panel shadow-sm">
+      <div class="hero-copy">
+        <p class="eyebrow mb-2">Hospital KPI Intelligence</p>
+        <h1 class="mb-3">{{ dashboard.dashboardTitle }}</h1>
+        <p class="hero-summary mb-0">
+          Real-time pharmacy operations visibility for claims throughput, prior authorization pressure, and specialty spend.
+        </p>
+      </div>
+
+      <div class="hero-actions">
+        <label class="form-label text-uppercase small fw-semibold">Region</label>
+        <select class="form-select" [(ngModel)]="selectedRegion" (ngModelChange)="onRegionChange()">
+          <option *ngFor="let region of regions" [value]="region">{{ region }}</option>
+        </select>
+        <span class="timestamp mt-3">Updated {{ dashboard.generatedUtc | date:'medium' }}</span>
+      </div>
+    </section>
+
+    <section class="row g-3 mt-1">
+      <div class="col-12 col-md-6 col-xl-3">
+        <div class="metric-card">
+          <span class="metric-label">Claims Today</span>
+          <strong>{{ dashboard.summary.claimsToday }}</strong>
+          <small>{{ dashboard.summary.activePatients }} active patients</small>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-xl-3">
+        <div class="metric-card">
+          <span class="metric-label">MTD Paid Spend</span>
+          <strong>{{ asCurrency(dashboard.summary.paidAmountMonthToDate) }}</strong>
+          <small>{{ dashboard.summary.activeFacilities }} facilities online</small>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-xl-3">
+        <div class="metric-card">
+          <span class="metric-label">Generic Dispense Rate</span>
+          <strong>{{ dashboard.summary.genericDispenseRate }}%</strong>
+          <small>PA approval {{ dashboard.summary.priorAuthorizationApprovalRate }}%</small>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-xl-3">
+        <div class="metric-card metric-card-alert">
+          <span class="metric-label">Operational Pressure</span>
+          <strong>{{ dashboard.summary.pendingUrgentAuthorizations }}</strong>
+          <small>urgent authorizations pending</small>
+        </div>
+      </div>
+    </section>
+
+    <section class="row g-3 mt-1">
+      <div class="col-12 col-xl-8">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="section-label mb-1">Six Month Spend</p>
+              <h2>Paid claim trend</h2>
+            </div>
+            <span class="stat-pill">{{ dashboard.summary.averageTurnaroundHours }}h avg turnaround</span>
+          </div>
+
+          <div class="trend-grid">
+            <div class="trend-column" *ngFor="let point of monthlySpend; trackBy: trackByMonth">
+              <div class="trend-bar-wrap">
+                <div class="trend-bar" [style.height.%]="(point.paidAmount / maxPaidAmount) * 100"></div>
+              </div>
+              <strong>{{ asCurrency(point.paidAmount) }}</strong>
+              <span>{{ point.month }}</span>
+              <small>{{ point.claimsProcessed }} claims / {{ point.deniedClaims }} denied</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-xl-4">
+        <div class="panel h-100">
+          <div class="panel-head">
+            <div>
+              <p class="section-label mb-1">Clinical Mix</p>
+              <h2>Department utilization</h2>
+            </div>
+          </div>
+
+          <div class="mix-list">
+            <div class="mix-row" *ngFor="let department of departmentMix; trackBy: trackByDepartment">
+              <div>
+                <strong>{{ department.department }}</strong>
+                <span>{{ department.claimsProcessed }} claims</span>
+              </div>
+              <div class="text-end">
+                <strong>{{ asCurrency(department.paidAmount) }}</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="row g-3 mt-1">
+      <div class="col-12 col-xl-7">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="section-label mb-1">Facility Benchmarking</p>
+              <h2>Claims performance</h2>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>Facility</th>
+                  <th>Claims</th>
+                  <th>Approval</th>
+                  <th>Turnaround</th>
+                  <th>Paid</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let facility of filteredFacilities; trackBy: trackByFacility"
+                  (click)="selectFacility(facility.facility)"
+                  [class.table-active]="facility.facility === selectedFacilityName">
+                  <td>
+                    <strong>{{ facility.facility }}</strong>
+                    <div class="cell-subtitle">{{ facility.region }}</div>
+                  </td>
+                  <td>{{ facility.claimsProcessed }}</td>
+                  <td>{{ facility.approvalRate }}%</td>
+                  <td>{{ facility.averageTurnaroundHours }}h</td>
+                  <td>{{ asCurrency(facility.paidAmount) }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-xl-5">
+        <div class="panel h-100">
+          <div class="panel-head">
+            <div>
+              <p class="section-label mb-1">Focused View</p>
+              <h2>{{ selectedFacility?.facility || 'Select a facility' }}</h2>
+            </div>
+          </div>
+
+          <div class="detail-grid" *ngIf="selectedFacility">
+            <div class="detail-tile">
+              <span>Approval rate</span>
+              <strong>{{ selectedFacility.approvalRate }}%</strong>
+            </div>
+            <div class="detail-tile">
+              <span>Pending PA</span>
+              <strong>{{ selectedFacility.pendingAuthorizations }}</strong>
+            </div>
+            <div class="detail-tile">
+              <span>Turnaround</span>
+              <strong>{{ selectedFacility.averageTurnaroundHours }}h</strong>
+            </div>
+            <div class="detail-tile">
+              <span>Paid volume</span>
+              <strong>{{ asCurrency(selectedFacility.paidAmount) }}</strong>
+            </div>
+          </div>
+
+          <div class="alert-list mt-3">
+            <div
+              class="alert-item"
+              *ngFor="let alert of alerts; trackBy: trackByAlert"
+              [ngClass]="severityClass(alert.severity)">
+              <span class="alert-chip">{{ alert.severity }}</span>
+              <div>
+                <strong>{{ alert.facility }}</strong>
+                <p class="mb-0">{{ alert.message }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<ng-template #loadingState>
+  <div class="loading-state">Loading PBM dashboard...</div>
+</ng-template>
+
+<ng-template #errorState>
+  <div class="loading-state">{{ errorMessage }}</div>
+</ng-template>

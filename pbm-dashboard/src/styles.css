@@ -1,0 +1,22 @@
+:root {
+  --pbm-ink: #17324d;
+  --pbm-slate: #6c7f90;
+  --pbm-surface: #f6f9fc;
+  --pbm-panel: #ffffff;
+  --pbm-accent: #0d9488;
+  --pbm-warn: #f59e0b;
+  --pbm-danger: #dc2626;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", "Helvetica Neue", sans-serif;
+  background:
+    radial-gradient(circle at top right, rgba(13, 148, 136, 0.12), transparent 30%),
+    linear-gradient(180deg, #eef6fb 0%, #f8fbfd 45%, #eef3f8 100%);
+  color: var(--pbm-ink);
+}
+
+* {
+  box-sizing: border-box;
+}
